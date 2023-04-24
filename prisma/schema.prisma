@@ -64,3 +64,57 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+//Pluto Pizza Models
+
+model Product {
+    id String @id @default(cuid())
+}
+
+model Address {
+    id String @id @default(cuid())
+}
+
+model Topping {
+    id String @id @default(cuid())
+}
+
+model TopingType {
+    id String @id @default(cuid())
+}
+
+model CrustType {
+    id String @id @default(cuid())
+}
+
+model CrustThickness {
+    id String @id @default(cuid())
+}
+
+model CheeseType {
+    id String @id @default(cuid())
+}
+
+model CheeseAmt {
+    id String @id @default(cuid())
+}
+
+model SauceType {
+    id String @id @default(cuid())
+}
+
+model SauceAmt {
+    id String @id @default(cuid())
+}
+
+model ProductSize {
+    id String @id @default(cuid())
+}
+
+model ProductCustomization {
+    id String @id @default(cuid())
+}
+
+model ProductCustomizationTopping {
+    id String @id @default(cuid())
+}
