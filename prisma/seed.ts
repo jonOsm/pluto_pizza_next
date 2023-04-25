@@ -1,5 +1,12 @@
 import { prisma } from "../src/server/db"
-
+async function toppingTypes() {
+  //random seeded values
+  await prisma.topingType.upsert({
+    where: {},
+    create: {},
+    update: {},
+  })
+}
 async function main() {
   const id = "cl9ebqhxk00003b600tymydho"
   await prisma.example.upsert({

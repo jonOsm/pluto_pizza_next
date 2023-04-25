@@ -47,6 +47,7 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+//TODO: Migrate fields to separate profile model when necessary
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -55,6 +56,12 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    //profile fields?
+    firstName     String?
+    lastName      String?
+    disabled      Boolean   @default(false)
+    addresses     Address[]
+    carts         Cart[]
 }
 
 model VerificationToken {
@@ -68,53 +75,131 @@ model VerificationToken {
 //Pluto Pizza Models
 
 model Product {
-    id String @id @default(cuid())
+    id        String  @id @default(cuid())
+    name      String
+    basePrice Float
+    isDraft   Boolean
+    stock     Int
+    sku       String
+    image_url String
+
+    productCustomizations ProductCustomization[]
 }
 
 model Address {
-    id String @id @default(cuid())
+    id          String  @id @default(cuid())
+    label       String?
+    street      String
+    unit        String?
+    province    String
+    country     String
+    postalCode  String
+    phoneNumber String
+    extension   String
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
 }
 
 model Topping {
-    id String @id @default(cuid())
+    id         String @id @default(cuid())
+    name       String
+    base_price Float
+
+    topingType   TopingType? @relation(fields: [topingTypeId], references: [id])
+    topingTypeId String?
+
+    productCustomizations ProductCustomization[]
 }
 
 model TopingType {
-    id String @id @default(cuid())
+    id       String    @id @default(cuid())
+    name     String
+    toppings Topping[]
 }
 
 model CrustType {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    productCustomizations ProductCustomization[]
 }
 
 model CrustThickness {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    productCustomizations ProductCustomization[]
 }
 
 model CheeseType {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    productCustomizations ProductCustomization[]
 }
 
 model CheeseAmt {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    basePrice             Float
+    productCustomizations ProductCustomization[]
 }
 
 model SauceType {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    productCustomizations ProductCustomization[]
 }
 
 model SauceAmt {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    name                  String
+    productCustomizations ProductCustomization[]
 }
 
 model ProductSize {
-    id String @id @default(cuid())
+    id                    String                 @id @default(cuid())
+    basePrice             Float
+    productCustomizations ProductCustomization[]
 }
 
 model ProductCustomization {
-    id String @id @default(cuid())
+    id               String         @id @default(cuid())
+    product          Product        @relation(fields: [productId], references: [id])
+    productId        String
+    toppings         Topping[]
+    crustType        CrustType      @relation(fields: [crustTypeId], references: [id])
+    crustTypeId      String
+    crustThickness   CrustThickness @relation(fields: [crustThicknessId], references: [id])
+    crustThicknessId String
+    cheeseType       CheeseType     @relation(fields: [cheeseTypeId], references: [id])
+    cheeseTypeId     String
+    cheeseAmt        CheeseAmt      @relation(fields: [cheeseAmtId], references: [id])
+    cheeseAmtId      String
+    sauceType        SauceType      @relation(fields: [sauceTypeId], references: [id])
+    sauceTypeId      String
+    sauceAmt         SauceAmt       @relation(fields: [sauceAmtId], references: [id])
+    sauceAmtId       String
+    productSize      ProductSize    @relation(fields: [productSizeId], references: [id])
+    productSizeId    String
+
+    cartItem CartItem?
 }
 
-model ProductCustomizationTopping {
-    id String @id @default(cuid())
+// model ProductCustomizationTopping {
+//     id String @id @default(cuid())
+// }
+
+model CartItem {
+    id                     String               @id @default(cuid())
+    productCustomization   ProductCustomization @relation(fields: [productCustomizationId], references: [id])
+    productCustomizationId String               @unique
+    cart                   Cart                 @relation(fields: [cartId], references: [id])
+    cartId                 String
+}
+
+model Cart {
+    id     String  @id @default(cuid())
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
+
+    cartItems CartItem[]
 }
