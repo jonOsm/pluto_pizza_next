@@ -106,13 +106,13 @@ model Topping {
     name       String
     base_price Float
 
-    topingType   TopingType? @relation(fields: [topingTypeId], references: [id])
+    topingType   ToppingType? @relation(fields: [topingTypeId], references: [id])
     topingTypeId String?
 
     productCustomizations ProductCustomization[]
 }
 
-model TopingType {
+model ToppingType {
     id       String    @id @default(cuid())
     name     String
     toppings Topping[]

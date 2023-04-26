@@ -1,23 +1,65 @@
+import type { Prisma } from "@prisma/client"
 import { prisma } from "../src/server/db"
-async function toppingTypes() {
-  //random seeded values
-  await prisma.topingType.upsert({
-    where: {},
-    create: {},
-    update: {},
-  })
+import { faker } from "@faker-js/faker"
+
+async function seedToppingTypes() {
+  const toppingTypes: Prisma.ToppingTypeCreateInput[] = [
+    { name: "meat" },
+    { name: "vegetable" },
+    { name: "other" },
+  ]
+
+  // createAll not supported by sqlite
+  for (const toppingType of toppingTypes) {
+    await prisma.toppingType.create({
+      data: toppingType,
+    })
+  }
 }
+
+async function seedCrustType() {
+  const crustTypes: Prisma.CrustTypeCreateInput[] = [
+    { name: "lightly done" },
+    { name: "standard" },
+    { name: "well done" },
+  ]
+
+  // createAll not supported by sqlite
+  for (const crustType of crustTypes) {
+    await prisma.toppingType.create({
+      data: crustType,
+    })
+  }
+}
+async function seedUsers(numUsers: number) {
+  const userIds: string[] = []
+  for (let i = 0; i < numUsers; i++) {
+    const user = await prisma.user.create({
+      data: {
+        email: faker.internet.email(),
+        name: faker.name.fullName(),
+      },
+    })
+    userIds.push(user.id)
+  }
+  return userIds
+}
+
+async function seedAddresses() {
+  const crustTypes: Prisma.AddressCreateInput[] = []
+
+  // createAll not supported by sqlite
+  // for (const crustType of crustTypes) {
+  //   await prisma.toppingType.create({
+  //     data: crustType,
+  //   })
+  // }
+}
+
 async function main() {
-  const id = "cl9ebqhxk00003b600tymydho"
-  await prisma.example.upsert({
-    where: {
-      id,
-    },
-    create: {
-      id,
-    },
-    update: {},
-  })
+  await seedToppingTypes()
+  await seedCrustType()
+  await seedUsers(30)
 }
 
 main()
