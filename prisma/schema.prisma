@@ -95,7 +95,6 @@ model Address {
     country     String
     postalCode  String
     phoneNumber String
-    extension   String
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String?

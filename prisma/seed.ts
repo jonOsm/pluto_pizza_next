@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client"
 import { prisma } from "../src/server/db"
-import { faker } from "@faker-js/faker"
+import { faker } from "@faker-js/faker/locale/en_CA"
 
 async function seedToppingTypes() {
   const toppingTypes: Prisma.ToppingTypeCreateInput[] = [
@@ -45,21 +45,35 @@ async function seedUsers(numUsers: number) {
   return userIds
 }
 
-async function seedAddresses() {
-  const crustTypes: Prisma.AddressCreateInput[] = []
+async function seedAddresses(userIds: string[]) {
+  for (const userId of userIds) {
+    const numAddresses = faker.datatype.number({ min: 0, max: 5 })
 
-  // createAll not supported by sqlite
-  // for (const crustType of crustTypes) {
-  //   await prisma.toppingType.create({
-  //     data: crustType,
-  //   })
-  // }
+    for (let i = 0; i < numAddresses; i++) {
+      const includeLabel = faker.datatype.boolean()
+      const province = faker.address.state()
+
+      await prisma.address.create({
+        data: {
+          userId: userId,
+          label: includeLabel ? faker.random.words() : null,
+          street: faker.address.streetAddress(),
+          unit: faker.address.secondaryAddress(),
+          province,
+          country: "CA",
+          postalCode: faker.address.zipCodeByState(province),
+          phoneNumber: faker.phone.number(),
+        },
+      })
+    }
+  }
 }
 
 async function main() {
   await seedToppingTypes()
   await seedCrustType()
-  await seedUsers(30)
+  const userIds = await seedUsers(30)
+  await seedAddresses(userIds)
 }
 
 main()
