@@ -92,12 +92,12 @@ model Address {
     street      String
     unit        String?
     province    String
-    country     String
+    country     String? @default("Canada")
     postalCode  String
     phoneNumber String
 
-    user   User?   @relation(fields: [userId], references: [id])
-    userId String?
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
 }
 
 model Topping {
