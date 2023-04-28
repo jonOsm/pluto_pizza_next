@@ -1,8 +1,16 @@
 import { useSession } from "next-auth/react"
 import UserInfoForm from "./userInfoForm"
+import { useState } from "react"
 
 export default function UserInfo() {
-  const { data: sessionData } = useSession()
+  const { data: sessionData, update: sessionUpdate } = useSession({
+    required: true,
+  })
+  const [formIsHidden, setFormIsHidden] = useState(true)
+  const handleUpdateInfoSubmit = async () => {
+    setFormIsHidden(!formIsHidden)
+    await sessionUpdate()
+  }
   return (
     <>
       <div className="card w-full bg-base-100 shadow-xl">
@@ -18,16 +26,21 @@ export default function UserInfo() {
           </div>
 
           <div className="card-actions mt-2 justify-end">
-            <label
-              htmlFor="user-info-modal"
+            <button
+              onClick={() => setFormIsHidden(false)}
               className="btn-outline btn-primary btn-sm btn"
             >
               Update Info
-            </label>
+            </button>
           </div>
         </div>
       </div>
-      <UserInfoForm />
+      <UserInfoForm
+        isHidden={formIsHidden}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={handleUpdateInfoSubmit}
+        onClose={() => setFormIsHidden(!formIsHidden)}
+      />
     </>
   )
 }
