@@ -29,4 +29,11 @@ export const addressRouter = createTRPCRouter({
         },
       })
     }),
+  delete: protectedProcedure.input(z.string()).mutation(({ input, ctx }) => {
+    return ctx.prisma.address.delete({
+      where: {
+        id: input,
+      },
+    })
+  }),
 })

@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react"
 import UserInfoForm from "./userInfoForm"
 import { useState } from "react"
+import Modal from "../Modal"
 
 export default function UserInfo() {
   const { data: sessionData, update: sessionUpdate } = useSession({
@@ -35,12 +36,16 @@ export default function UserInfo() {
           </div>
         </div>
       </div>
-      <UserInfoForm
+      <Modal
         isHidden={formIsHidden}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handleUpdateInfoSubmit}
         onClose={() => setFormIsHidden(!formIsHidden)}
-      />
+      >
+        <UserInfoForm
+          isHidden={formIsHidden}
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onSubmit={handleUpdateInfoSubmit}
+        />
+      </Modal>
     </>
   )
 }

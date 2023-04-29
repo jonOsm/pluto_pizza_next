@@ -1,6 +1,10 @@
 import { type AppType } from "next/app"
 import { type Session } from "next-auth"
 import { SessionProvider } from "next-auth/react"
+import "@fortawesome/fontawesome-svg-core/styles.css"
+
+import { config } from "@fortawesome/fontawesome-svg-core"
+config.autoAddCss = false
 
 import { api } from "~/utils/api"
 
