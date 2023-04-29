@@ -77,15 +77,17 @@ export default function Addresses() {
           </div>
         </div>
       </div>
-      <Modal isHidden={isHidden} onClose={() => setIsHidden(true)}>
-        <AddressForm
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={async () => {
-            await addresses.refetch()
-            setIsHidden(true)
-          }}
-        />
-      </Modal>
+      {!isHidden && (
+        <Modal isHidden={isHidden} onClose={() => setIsHidden(true)}>
+          <AddressForm
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onSubmit={async () => {
+              await addresses.refetch()
+              setIsHidden(true)
+            }}
+          />
+        </Modal>
+      )}
     </>
   )
 }

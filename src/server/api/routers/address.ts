@@ -1,5 +1,5 @@
 import { z } from "zod"
-
+import { createInput } from "~/schemas/address"
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc"
 
 export const addressRouter = createTRPCRouter({
@@ -11,16 +11,7 @@ export const addressRouter = createTRPCRouter({
     })
   }),
   create: protectedProcedure
-    .input(
-      z.object({
-        label: z.string().optional(),
-        unit: z.string().optional(),
-        street: z.string(),
-        province: z.string(),
-        postalCode: z.string(),
-        phoneNumber: z.string(),
-      })
-    )
+    .input(createInput)
     .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.address.create({
         data: {
