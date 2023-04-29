@@ -1,16 +1,31 @@
-import { type FormEvent, useState } from "react"
+import { type FormEvent, useState, ChangeEvent } from "react"
 import { api } from "~/utils/api"
 
 export default function AddressForm() {
-  const [label, setLabel] = useState("")
-  const [unit, setUnit] = useState("")
-  const [street, setStreet] = useState("")
-  const [province, setProvince] = useState("")
-  const [postalCode, setPostalCode] = useState("")
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const defaultNewAddress = {
+    street: "",
+    province: "",
+    postalCode: "",
+    phoneNumber: "",
+  }
+  const [newAddress, setNewAddress] = useState(defaultNewAddress)
+  // const [label, setLabel] = useState("")
+  // const [unit, setUnit] = useState("")
+  // const [street, setStreet] = useState("")
+  // const [province, setProvince] = useState("")
+  // const [postalCode, setPostalCode] = useState("")
+  // const [phoneNumber, setPhoneNumber] = useState("")
 
   const createAddress = api.address.create.useMutation()
-
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const hyphenIndicies: number[] = []
+    for (let i = 0; i < e.target.value.length; i++) {
+      if (e.target.value[i] === "-") {
+        hyphenIndicies.push(i)
+      }
+    }
+    setNewAddress({ ...newAddress, [e.target.name]: e.target.value })
+  }
   const handleSubmitAddress = (e: FormEvent<HTMLFormElement>) => {
     createAddress.mutate({
       label: "a label",
@@ -43,63 +58,46 @@ export default function AddressForm() {
               </label>
               <input
                 id="label"
+                name="label"
                 type="text"
+                onChange={handleChange}
                 placeholder="My Primary Address"
                 className="input-bordered input input-sm w-full max-w-xs"
               />
             </div>
             <div className="form-control w-full max-w-xs">
-              <label htmlFor="label" className="label">
-                <span className="label-text">Label</span>
+              <label htmlFor="street" className="label">
+                <span className="label-text">Street</span>
               </label>
               <input
-                id="label"
+                id="street"
+                name="street"
                 type="text"
-                placeholder="Type here"
+                onChange={handleChange}
                 className="input-bordered input input-sm w-full max-w-xs"
               />
             </div>
             <div className="form-control w-full max-w-xs">
-              <label htmlFor="label" className="label">
-                <span className="label-text">Label</span>
+              <label htmlFor="unit" className="label">
+                <span className="label-text">Unit</span>
               </label>
               <input
-                id="label"
+                id="unit"
+                name="unit"
                 type="text"
-                placeholder="Type here"
+                onChange={handleChange}
                 className="input-bordered input input-sm w-full max-w-xs"
               />
             </div>
             <div className="form-control w-full max-w-xs">
-              <label htmlFor="label" className="label">
-                <span className="label-text">Label</span>
+              <label htmlFor="phone-number" className="label">
+                <span className="label-text">Phone Number</span>
               </label>
               <input
-                id="label"
+                id="phone-number"
+                name="phone-number"
                 type="text"
-                placeholder="Type here"
-                className="input-bordered input input-sm w-full max-w-xs"
-              />
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="label" className="label">
-                <span className="label-text">Label</span>
-              </label>
-              <input
-                id="label"
-                type="text"
-                placeholder="Type here"
-                className="input-bordered input input-sm w-full max-w-xs"
-              />
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="label" className="label">
-                <span className="label-text">Label</span>
-              </label>
-              <input
-                id="label"
-                type="text"
-                placeholder="Type here"
+                onChange={handleChange}
                 className="input-bordered input input-sm w-full max-w-xs"
               />
             </div>
