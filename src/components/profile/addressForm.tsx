@@ -1,11 +1,13 @@
 import { api } from "~/utils/api"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createInput } from "~/schemas/address"
+import { createInput } from "~/validation/address"
 import Input from "../Input"
+import { type Address } from "@prisma/client"
 
 interface AddressFormProps {
   onSubmit?: () => void
+  defaultValues?: Partial<Address>
 }
 
 interface AddressFormInput {
@@ -19,12 +21,16 @@ interface AddressFormInput {
 
 export default function AddressForm({
   onSubmit: parentOnSubmit,
+  defaultValues,
 }: AddressFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AddressFormInput>({ resolver: zodResolver(createInput) })
+  } = useForm<AddressFormInput>({
+    defaultValues: defaultValues as AddressFormInput,
+    resolver: zodResolver(createInput),
+  })
 
   const createAddress = api.address.create.useMutation({
     onSettled() {
@@ -35,6 +41,11 @@ export default function AddressForm({
   })
 
   const onSubmit: SubmitHandler<AddressFormInput> = (data) => {
+    if (defaultValues?.id) {
+      //edit
+      return
+    }
+
     createAddress.mutate(data)
   }
 
@@ -44,13 +55,9 @@ export default function AddressForm({
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Input register={register} label="label" error={errors.label?.message} />
-      <Input register={register} label="unit" error={errors.unit?.message} />
-      <Input
-        register={register}
-        label="street"
-        error={errors.street?.message}
-      />
+      <Input register={register} name="label" error={errors.label?.message} />
+      <Input register={register} name="unit" error={errors.unit?.message} />
+      <Input register={register} name="street" error={errors.street?.message} />
       <div className="form-control w-full max-w-xs">
         <label htmlFor="province" className="label">
           <span className="label-text">Province</span>
@@ -68,12 +75,12 @@ export default function AddressForm({
       </div>
       <Input
         register={register}
-        label="phoneNumber"
+        name="phoneNumber"
         error={errors.phoneNumber?.message}
       />
       <Input
         register={register}
-        label="postalCode"
+        name="postalCode"
         error={errors.postalCode?.message}
       />
       <button type="submit" className="btn">

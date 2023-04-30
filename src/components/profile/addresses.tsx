@@ -8,9 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 // import the icons you need
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons"
+import next from "next"
 
 export default function Addresses() {
   const [isHidden, setIsHidden] = useState(true)
+  const [defaultValues, setDefaultValues] = useState<Partial<Address>>({})
 
   const addresses = api.address.getAllCurrentUser.useQuery()
 
@@ -22,6 +24,12 @@ export default function Addresses() {
   const handleDelete = (addressId: string) => {
     addressDelete.mutate(addressId)
   }
+
+  const handleEdit = (address: Address) => {
+    setDefaultValues(address)
+    setIsHidden(false)
+  }
+
   return (
     <>
       <div className="card w-full bg-base-100 shadow-xl">
@@ -51,7 +59,7 @@ export default function Addresses() {
                           <td>{address.unit}</td>
                           <td>{address.province}</td>
                           <td>{address.phoneNumber}</td>
-                          <td>
+                          <td onClick={() => handleEdit(address)}>
                             <FontAwesomeIcon icon={faEdit} />
                           </td>
                           <td onClick={() => handleDelete(address.id)}>
@@ -77,9 +85,10 @@ export default function Addresses() {
           </div>
         </div>
       </div>
-      {!isHidden && (
+      {
         <Modal isHidden={isHidden} onClose={() => setIsHidden(true)}>
           <AddressForm
+            defaultValues={defaultValues}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={async () => {
               await addresses.refetch()
@@ -87,7 +96,7 @@ export default function Addresses() {
             }}
           />
         </Modal>
-      )}
+      }
     </>
   )
 }

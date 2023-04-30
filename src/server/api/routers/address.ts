@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { createInput } from "~/schemas/address"
+import { createInput } from "~/validation/address"
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc"
 
 export const addressRouter = createTRPCRouter({
