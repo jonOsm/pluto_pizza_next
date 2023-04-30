@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client"
+import type { Prisma, User } from "@prisma/client"
 import { prisma } from "../src/server/db"
 import { faker } from "@faker-js/faker/locale/en_CA"
 
@@ -9,71 +9,70 @@ async function seedToppingTypes() {
     { name: "other" },
   ]
 
-  // createAll not supported by sqlite
-  for (const toppingType of toppingTypes) {
-    await prisma.toppingType.create({
-      data: toppingType,
-    })
-  }
+  await prisma.toppingType.createMany({ data: toppingTypes })
 }
 
 async function seedCrustType() {
-  const crustTypes: Prisma.CrustTypeCreateInput[] = [
+  const crustTypes: Prisma.CrustTypeCreateManyInput[] = [
     { name: "lightly done" },
     { name: "standard" },
     { name: "well done" },
   ]
 
-  // createAll not supported by sqlite
-  for (const crustType of crustTypes) {
-    await prisma.toppingType.create({
-      data: crustType,
-    })
-  }
+  await prisma.toppingType.createMany({
+    data: crustTypes,
+  })
 }
 async function seedUsers(numUsers: number) {
-  const userIds: string[] = []
+  const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < numUsers; i++) {
-    const user = await prisma.user.create({
-      data: {
-        email: faker.internet.email(),
-        name: faker.name.fullName(),
-      },
+    users.push({
+      email: faker.internet.email(),
+      name: faker.name.fullName(),
     })
-    userIds.push(user.id)
   }
-  return userIds
+  return await prisma.user.createMany({ data: users })
 }
 
-async function seedAddresses(userIds: string[]) {
-  for (const userId of userIds) {
+async function seedAddresses() {
+  const users = await prisma.user.findMany()
+  for (const { id: userId } of users) {
     const numAddresses = faker.datatype.number({ min: 0, max: 5 })
+    const addresses: Prisma.AddressCreateManyInput[] = []
 
     for (let i = 0; i < numAddresses; i++) {
       const includeLabel = faker.datatype.boolean()
       const province = faker.address.state()
 
-      await prisma.address.create({
-        data: {
-          userId: userId,
-          label: includeLabel ? faker.random.words() : null,
-          street: faker.address.streetAddress(),
-          unit: faker.address.secondaryAddress(),
-          province,
-          country: "CA",
-          postalCode: faker.address.zipCodeByState(province),
-          phoneNumber: faker.phone.number(),
-        },
+      addresses.push({
+        userId: userId,
+        label: includeLabel ? faker.random.words() : null,
+        street: faker.address.streetAddress(),
+        unit: faker.address.secondaryAddress(),
+        province,
+        country: "CA",
+        postalCode: faker.address.zipCodeByState(province),
+        phoneNumber: faker.phone.number(),
       })
     }
+
+    await prisma.address.createMany({ data: addresses })
   }
 }
 
+const reset = async () => {
+  await prisma.address.deleteMany({})
+  await prisma.toppingType.deleteMany({})
+  await prisma.crustType.deleteMany({})
+  await prisma.user.deleteMany({})
+}
+
 async function main() {
+  await reset()
   await seedToppingTypes()
   await seedCrustType()
-  const userIds = await seedUsers(30)
-  await seedAddresses(userIds)
+  await seedUsers(30)
+  await seedAddresses()
 }
 
 main()
