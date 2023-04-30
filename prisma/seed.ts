@@ -1,4 +1,4 @@
-import type { Prisma, User } from "@prisma/client"
+import type { Prisma } from "@prisma/client"
 import { prisma } from "../src/server/db"
 import { faker } from "@faker-js/faker/locale/en_CA"
 
@@ -49,6 +49,17 @@ async function seedCheeseAmt() {
 
 async function seedSauceType() {
   await prisma.sauceType.createMany({
+    data: [
+      { name: "classic tomato" },
+      { name: "pesto" },
+      { name: "bbq" },
+      { name: "none" },
+    ],
+  })
+}
+
+async function seedSauceAmt() {
+  await prisma.sauceType.createMany({
     data: [{ name: "standard" }, { name: "extra" }],
   })
 }
@@ -90,18 +101,61 @@ async function seedAddresses() {
   }
 }
 
-const reset = async () => {
+async function reset() {
+  await Promise.all([
+    prisma.toppingType.deleteMany({}),
+    prisma.cheeseAmt.deleteMany({}),
+    prisma.cheeseType.deleteMany({}),
+    prisma.crustThickness.deleteMany({}),
+    prisma.crustType.deleteMany({}),
+    prisma.sauceType.deleteMany({}),
+    prisma.sauceAmt.deleteMany({}),
+  ])
+
   await prisma.address.deleteMany({})
-  await prisma.toppingType.deleteMany({})
-  await prisma.crustType.deleteMany({})
-  await prisma.user.deleteMany({})
+
+  await Promise.all([prisma.user.deleteMany({}), prisma.product.deleteMany({})])
+}
+
+async function seedProductCustomizationDependencies() {
+  await Promise.all([
+    seedToppingTypes(),
+    seedCheeseAmt(),
+    seedCheeseType(),
+    seedCrustThickness(),
+    seedCrustType(),
+    seedSauceType(),
+    seedSauceAmt(),
+  ])
+}
+
+async function seedProducts(numProducts: number) {
+  const products: Prisma.ProductCreateInput[] = []
+  const nameCaps = ["pizza", "sandwich", "pasta"]
+  for (let i = 0; i < numProducts; i++) {
+    const numWords = faker.datatype.number({ min: 1, max: 3 })
+    const nameCap =
+      nameCaps[faker.datatype.number({ min: 0, max: nameCaps.length })]
+
+    products.push({
+      name: `${faker.lorem.words(numWords)} ${nameCap || ""}`,
+      basePrice: faker.datatype.float({ min: 6, max: 14 }),
+      isDraft: false,
+      stock: faker.datatype.number({ min: 0, max: 100 }),
+      sku: faker.datatype.uuid(),
+      image_url: faker.image.food(),
+    })
+  }
+  await prisma.product.createMany({ data: products })
 }
 
 async function main() {
   await reset()
-  await seedToppingTypes()
-  await seedCrustType()
-  await seedUsers(30)
+  await Promise.all([
+    seedUsers(30),
+    seedProductCustomizationDependencies(),
+    seedProducts(30),
+  ])
   await seedAddresses()
 }
 
