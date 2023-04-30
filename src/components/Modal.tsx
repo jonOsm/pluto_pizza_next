@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from "react"
-
+import { useSpring, animated } from "@react-spring/web"
 interface ModalProps {
   isHidden: boolean
   onClose: () => void
@@ -10,9 +10,13 @@ export default function Modal({
   onClose,
   children,
 }: PropsWithChildren<ModalProps>) {
+  const outerSpring = useSpring({ from: { opacity: 0 }, to: { opacity: 100 } })
   return (
     <>
-      <div className={"modal " + (isHidden ? "" : "modal-open")}>
+      <animated.div
+        style={{ ...outerSpring }}
+        className={"modal " + (isHidden ? "" : "modal-open")}
+      >
         <div className="modal-box relative">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-bold">Add New Address</h3>
@@ -20,9 +24,9 @@ export default function Modal({
               ✕
             </button>
           </div>
-          {children}
+          <div>{children}</div>
         </div>
-      </div>
+      </animated.div>
     </>
   )
 }

@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 // import the icons you need
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons"
-import next from "next"
 
 export default function Addresses() {
   const [isHidden, setIsHidden] = useState(true)
@@ -28,6 +27,20 @@ export default function Addresses() {
   const handleEdit = (address: Address) => {
     setDefaultValues(address)
     setIsHidden(false)
+  }
+
+  const handleAddClick = () => {
+    setDefaultValues({})
+    setIsHidden(false)
+  }
+
+  const handleClose = () => {
+    setIsHidden(true)
+  }
+
+  const handleSubmit = async () => {
+    await addresses.refetch()
+    setIsHidden(true)
   }
 
   return (
@@ -77,7 +90,7 @@ export default function Addresses() {
           </div>
           <div className="card-actions mt-2 justify-end">
             <button
-              onClick={() => setIsHidden(false)}
+              onClick={handleAddClick}
               className="btn-outline btn-primary btn-sm btn"
             >
               Add Address
@@ -85,18 +98,18 @@ export default function Addresses() {
           </div>
         </div>
       </div>
-      {
-        <Modal isHidden={isHidden} onClose={() => setIsHidden(true)}>
+      {/* TODO: Transition handled by Daisy CSS classes but we need to reset the form,
+                Opted to destroy for instead of dealing with sorting out reset logic.
+                Either a) add animation on  mount/destroy or b) sort out aforementioned logic */}
+      {!isHidden && (
+        <Modal isHidden={isHidden} onClose={handleClose}>
           <AddressForm
             defaultValues={defaultValues}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={async () => {
-              await addresses.refetch()
-              setIsHidden(true)
-            }}
+            onSubmit={handleSubmit}
           />
         </Modal>
-      }
+      )}
     </>
   )
 }

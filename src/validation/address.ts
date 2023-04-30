@@ -1,5 +1,5 @@
 import { z } from "zod"
-export const createInput = z.object({
+export const createValidation = z.object({
   label: z.string().optional(),
   unit: z.string().optional(),
   street: z.string().min(3),
@@ -7,3 +7,5 @@ export const createInput = z.object({
   postalCode: z.string().min(6),
   phoneNumber: z.string(),
 })
+
+export const editValidation = createValidation.extend({ id: z.string() })

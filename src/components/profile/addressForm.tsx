@@ -1,7 +1,7 @@
 import { api } from "~/utils/api"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createInput } from "~/validation/address"
+import { createValidation } from "~/validation/address"
 import Input from "../Input"
 import { type Address } from "@prisma/client"
 
@@ -29,11 +29,19 @@ export default function AddressForm({
     formState: { errors },
   } = useForm<AddressFormInput>({
     defaultValues: defaultValues as AddressFormInput,
-    resolver: zodResolver(createInput),
+    resolver: zodResolver(createValidation),
   })
 
   const createAddress = api.address.create.useMutation({
-    onSettled() {
+    onSuccess() {
+      if (parentOnSubmit) {
+        parentOnSubmit()
+      }
+    },
+  })
+
+  const updateAddress = api.address.update.useMutation({
+    onSuccess() {
       if (parentOnSubmit) {
         parentOnSubmit()
       }
@@ -42,7 +50,7 @@ export default function AddressForm({
 
   const onSubmit: SubmitHandler<AddressFormInput> = (data) => {
     if (defaultValues?.id) {
-      //edit
+      updateAddress.mutate({ ...data, id: defaultValues.id })
       return
     }
 
