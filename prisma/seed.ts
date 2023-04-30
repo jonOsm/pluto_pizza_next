@@ -13,16 +13,46 @@ async function seedToppingTypes() {
 }
 
 async function seedCrustType() {
-  const crustTypes: Prisma.CrustTypeCreateManyInput[] = [
-    { name: "lightly done" },
-    { name: "standard" },
-    { name: "well done" },
-  ]
-
-  await prisma.toppingType.createMany({
-    data: crustTypes,
+  await prisma.crustType.createMany({
+    data: [
+      { name: "lightly done" },
+      { name: "standard" },
+      { name: "well done" },
+    ],
   })
 }
+
+async function seedCrustThickness() {
+  const toppingTypes: Prisma.CrustThicknessCreateManyInput[] = [
+    { name: "thin" },
+    { name: "standard" },
+    { name: "thick" },
+  ]
+
+  await prisma.toppingType.createMany({ data: toppingTypes })
+}
+
+async function seedCheeseType() {
+  await prisma.cheeseType.createMany({
+    data: [{ name: "mozzarella" }, { name: "4 cheese" }, { name: "vegan" }],
+  })
+}
+
+async function seedCheeseAmt() {
+  await prisma.cheeseAmt.createMany({
+    data: [
+      { name: "normal", basePrice: 0 },
+      { name: "extra", basePrice: 1.5 },
+    ],
+  })
+}
+
+async function seedSauceType() {
+  await prisma.sauceType.createMany({
+    data: [{ name: "standard" }, { name: "extra" }],
+  })
+}
+
 async function seedUsers(numUsers: number) {
   const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < numUsers; i++) {
