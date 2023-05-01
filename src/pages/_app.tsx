@@ -19,8 +19,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       {/* Padding used to negate collapsing topmargin */}
       <div
-        data-theme="night"
-        className="bg-gradient-to-br from-base-300 to-base-content p-[0.05px]"
+        data-theme="business"
+        className="bg-gradient-to-br from-black to-base-content p-[0.05px]"
       >
         <TopBar />
         <div className="p-3">

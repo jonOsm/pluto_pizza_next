@@ -36,7 +36,19 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="m-auto flex max-w-screen-xl flex-col gap-3">
-        <div className="glass grid grid-cols-12 gap-3 rounded-lg p-3">
+        <img
+          className="absolute -left-[200px] top-[10vh]"
+          width="500"
+          height="500"
+          src="/saturn.png"
+        ></img>
+        <img
+          className="absolute -right-[80px] top-[30vh]"
+          width="600"
+          height="600"
+          src="/spaceship.png"
+        ></img>
+        <div className="grid grid-cols-12 gap-3 rounded-lg p-3">
           {products.data && products.data?.length > 0
             ? products.data?.map((p) => (
                 <Card
