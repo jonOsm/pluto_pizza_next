@@ -9,71 +9,155 @@ async function seedToppingTypes() {
     { name: "other" },
   ]
 
-  // createAll not supported by sqlite
-  for (const toppingType of toppingTypes) {
-    await prisma.toppingType.create({
-      data: toppingType,
-    })
-  }
+  await prisma.toppingType.createMany({ data: toppingTypes })
 }
 
 async function seedCrustType() {
-  const crustTypes: Prisma.CrustTypeCreateInput[] = [
-    { name: "lightly done" },
+  await prisma.crustType.createMany({
+    data: [
+      { name: "lightly done" },
+      { name: "standard" },
+      { name: "well done" },
+    ],
+  })
+}
+
+async function seedCrustThickness() {
+  const toppingTypes: Prisma.CrustThicknessCreateManyInput[] = [
+    { name: "thin" },
     { name: "standard" },
-    { name: "well done" },
+    { name: "thick" },
   ]
 
-  // createAll not supported by sqlite
-  for (const crustType of crustTypes) {
-    await prisma.toppingType.create({
-      data: crustType,
-    })
-  }
-}
-async function seedUsers(numUsers: number) {
-  const userIds: string[] = []
-  for (let i = 0; i < numUsers; i++) {
-    const user = await prisma.user.create({
-      data: {
-        email: faker.internet.email(),
-        name: faker.name.fullName(),
-      },
-    })
-    userIds.push(user.id)
-  }
-  return userIds
+  await prisma.toppingType.createMany({ data: toppingTypes })
 }
 
-async function seedAddresses(userIds: string[]) {
-  for (const userId of userIds) {
+async function seedCheeseType() {
+  await prisma.cheeseType.createMany({
+    data: [{ name: "mozzarella" }, { name: "4 cheese" }, { name: "vegan" }],
+  })
+}
+
+async function seedCheeseAmt() {
+  await prisma.cheeseAmt.createMany({
+    data: [
+      { name: "normal", basePrice: 0 },
+      { name: "extra", basePrice: 1.5 },
+    ],
+  })
+}
+
+async function seedSauceType() {
+  await prisma.sauceType.createMany({
+    data: [
+      { name: "classic tomato" },
+      { name: "pesto" },
+      { name: "bbq" },
+      { name: "none" },
+    ],
+  })
+}
+
+async function seedSauceAmt() {
+  await prisma.sauceType.createMany({
+    data: [{ name: "standard" }, { name: "extra" }],
+  })
+}
+
+async function seedUsers(numUsers: number) {
+  const users: Prisma.UserCreateManyInput[] = []
+  for (let i = 0; i < numUsers; i++) {
+    users.push({
+      email: faker.internet.email(),
+      name: faker.name.fullName(),
+    })
+  }
+  return await prisma.user.createMany({ data: users })
+}
+
+async function seedAddresses() {
+  const users = await prisma.user.findMany()
+  for (const { id: userId } of users) {
     const numAddresses = faker.datatype.number({ min: 0, max: 5 })
+    const addresses: Prisma.AddressCreateManyInput[] = []
 
     for (let i = 0; i < numAddresses; i++) {
       const includeLabel = faker.datatype.boolean()
       const province = faker.address.state()
 
-      await prisma.address.create({
-        data: {
-          userId: userId,
-          label: includeLabel ? faker.random.words() : null,
-          street: faker.address.streetAddress(),
-          unit: faker.address.secondaryAddress(),
-          province,
-          country: "CA",
-          postalCode: faker.address.zipCodeByState(province),
-          phoneNumber: faker.phone.number(),
-        },
+      addresses.push({
+        userId: userId,
+        label: includeLabel ? faker.random.words() : null,
+        street: faker.address.streetAddress(),
+        unit: faker.address.secondaryAddress(),
+        province,
+        country: "CA",
+        postalCode: faker.address.zipCodeByState(province),
+        phoneNumber: faker.phone.number(),
       })
     }
+
+    await prisma.address.createMany({ data: addresses })
   }
 }
 
+async function reset() {
+  await Promise.all([
+    prisma.toppingType.deleteMany({}),
+    prisma.cheeseAmt.deleteMany({}),
+    prisma.cheeseType.deleteMany({}),
+    prisma.crustThickness.deleteMany({}),
+    prisma.crustType.deleteMany({}),
+    prisma.sauceType.deleteMany({}),
+    prisma.sauceAmt.deleteMany({}),
+  ])
+
+  await prisma.address.deleteMany({})
+
+  await Promise.all([prisma.user.deleteMany({}), prisma.product.deleteMany({})])
+}
+
+async function seedProductCustomizationDependencies() {
+  await Promise.all([
+    seedToppingTypes(),
+    seedCheeseAmt(),
+    seedCheeseType(),
+    seedCrustThickness(),
+    seedCrustType(),
+    seedSauceType(),
+    seedSauceAmt(),
+  ])
+}
+
+async function seedProducts(numProducts: number) {
+  const products: Prisma.ProductCreateInput[] = []
+  const nameCaps = ["pizza", "sandwich", "pasta"]
+  for (let i = 0; i < numProducts; i++) {
+    const numWords = faker.datatype.number({ min: 1, max: 3 })
+    const nameCap =
+      nameCaps[faker.datatype.number({ min: 0, max: nameCaps.length })]
+
+    products.push({
+      name: `${faker.lorem.words(numWords)} ${nameCap || ""}`,
+      basePrice: faker.datatype.float({ min: 6, max: 14 }),
+      description: faker.lorem.lines(),
+      isDraft: false,
+      stock: faker.datatype.number({ min: 0, max: 100 }),
+      sku: faker.datatype.uuid(),
+      imageUrl: faker.image.food(1920 / 2, 1080 / 2, true),
+    })
+  }
+  await prisma.product.createMany({ data: products })
+}
+
 async function main() {
-  await seedToppingTypes()
-  await seedCrustType()
-  const userIds = await seedUsers(30)
-  await seedAddresses(userIds)
+  await reset()
+  await Promise.all([
+    seedUsers(30),
+    seedProductCustomizationDependencies(),
+    seedProducts(30),
+  ])
+  await seedAddresses()
 }
 
 main()
