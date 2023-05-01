@@ -140,10 +140,11 @@ async function seedProducts(numProducts: number) {
     products.push({
       name: `${faker.lorem.words(numWords)} ${nameCap || ""}`,
       basePrice: faker.datatype.float({ min: 6, max: 14 }),
+      description: faker.lorem.lines(),
       isDraft: false,
       stock: faker.datatype.number({ min: 0, max: 100 }),
       sku: faker.datatype.uuid(),
-      image_url: faker.image.food(),
+      imageUrl: faker.image.food(1920 / 2, 1080 / 2, true),
     })
   }
   await prisma.product.createMany({ data: products })

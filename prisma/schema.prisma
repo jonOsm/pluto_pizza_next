@@ -75,13 +75,14 @@ model VerificationToken {
 //Pluto Pizza Models
 
 model Product {
-    id        String  @id @default(cuid())
-    name      String
-    basePrice Float
-    isDraft   Boolean
-    stock     Int
-    sku       String
-    image_url String
+    id          String  @id @default(cuid())
+    name        String
+    description String
+    basePrice   Float
+    isDraft     Boolean
+    stock       Int
+    sku         String
+    imageUrl    String
 
     productCustomizations ProductCustomization[]
 }

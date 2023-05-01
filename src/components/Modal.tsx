@@ -10,11 +10,11 @@ export default function Modal({
   onClose,
   children,
 }: PropsWithChildren<ModalProps>) {
-  const outerSpring = useSpring({ from: { opacity: 0 }, to: { opacity: 100 } })
+  // const outerSpring = useSpring({ from: { opacity: 0 }, to: { opacity: 100 } })
   return (
     <>
       <animated.div
-        style={{ ...outerSpring }}
+        // style={{ ...outerSpring }}
         className={"modal " + (isHidden ? "" : "modal-open")}
       >
         <div className="modal-box relative">
