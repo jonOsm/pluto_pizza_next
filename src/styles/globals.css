@@ -1,3 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.card.image-full::before {
+    background:none  !important;
+}
+
+.animated-star {
+    animation-name: north;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+}
+
+
+@keyframes north {
+    to {
+        top: -1%;
+    }
+}
+
+/* .shooting-star {
+    animation-name: north-east;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+}
+
+@keyframes north-east {
+    to {
+        top: -1%;
+        right: 100%;
+    }
+}  */
+
+body::-webkit-scrollbar {
+  width: 3px;
+}
+ 
+body::-webkit-scrollbar-track {
+    background-color: rgba(26, 26, 26);
+  
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: orange;
+
+}

@@ -157,6 +157,7 @@ model SauceAmt {
 
 model ProductSize {
     id                    String                 @id @default(cuid())
+    name                  String
     basePrice             Float
     productCustomizations ProductCustomization[]
 }
@@ -180,6 +181,7 @@ model ProductCustomization {
     sauceAmtId       String
     productSize      ProductSize    @relation(fields: [productSizeId], references: [id])
     productSizeId    String
+    isDefault        Boolean        @default(false)
 
     cartItem CartItem?
 }

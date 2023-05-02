@@ -1,6 +1,7 @@
 import { type AppType } from "next/app"
 import { type Session } from "next-auth"
 import { SessionProvider } from "next-auth/react"
+import { Strait } from "next/font/google"
 import "@fortawesome/fontawesome-svg-core/styles.css"
 
 import { config } from "@fortawesome/fontawesome-svg-core"
@@ -10,6 +11,9 @@ import { api } from "~/utils/api"
 
 import "~/styles/globals.css"
 import TopBar from "~/components/TopBar"
+import Starfield from "~/components/Starfield"
+
+const strait = Strait({ subsets: ["latin"], weight: "400" })
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -18,11 +22,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       {/* Padding used to negate collapsing topmargin */}
-      <div className="bg-base-300 p-[0.05px]">
+      <div
+        data-theme="business"
+        style={strait.style}
+        className="relative min-h-screen bg-base-300 p-[0.05px] sm:bg-gradient-to-br sm:from-base-300 sm:to-base-100"
+      >
         <TopBar />
-        <div className="p-3">
+        <div className="relative overflow-x-hidden p-3">
           <Component {...pageProps} />
         </div>
+        <Starfield></Starfield>
       </div>
     </SessionProvider>
   )
