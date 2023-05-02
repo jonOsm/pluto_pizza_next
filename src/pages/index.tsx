@@ -9,7 +9,7 @@ import { Bruno_Ace_SC } from "next/font/google"
 const bruno = Bruno_Ace_SC({ subsets: ["latin"], weight: "400" })
 
 const Home: NextPage = () => {
-  const pageSize = 12
+  const pageSize = 9
   //TODO: Create pagination component
   const [productPager, setProductPager] = useState({ skip: 0, take: pageSize })
 
@@ -39,21 +39,34 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="m-auto flex max-w-screen-xl flex-col gap-3">
+        {/* TODO: convert these to background images */}
         <img
-          className="absolute -left-[200px] top-[10vh]"
+          className="absolute -left-[150px] top-[10vh]"
           width="500"
           height="500"
           src="/saturn.png"
         ></img>
         <img
-          className="absolute -right-[80px] top-[30vh] hidden sm:block"
+          className="absolute hidden sm:-right-[100px] sm:top-[30vh] sm:block"
+          // className="absolute right-0 top-[30vh] -mr-[80px] hidden sm:inline-block"
           width="600"
           height="600"
           src="/spaceship.png"
         ></img>
-        <h1 className={"bold mt-3 text-[40px] uppercase " + bruno.className}>
-          Our Otherworldly Menu
-        </h1>
+        <div className="z-10 my-12 w-full rounded bg-base-300/70 p-2 sm:bg-inherit">
+          <h1
+            className={
+              "bold z-10 mt-3 text-3xl uppercase sm:text-[40px] " +
+              bruno.className
+            }
+          >
+            Our Otherworldly Menu
+          </h1>
+          <p className="text-xl">
+            Parttake in the finest delicacies the solar system has to offer. Low
+            prices, out-of-this-world flavour!
+          </p>
+        </div>
         <div className="grid grid-cols-12 gap-3 rounded-lg p-3">
           {products.data && products.data?.length > 0
             ? products.data?.map((p) => (
@@ -63,7 +76,7 @@ const Home: NextPage = () => {
                   imgUrl={p.imageUrl}
                   btnText="Add to Order"
                 >
-                  <span className="text-xl ">${p.basePrice}</span>
+                  <span className="text-xl text-accent">${p.basePrice}</span>
                   <p className="text-xl ">{p.description}</p>
                 </Card>
               ))

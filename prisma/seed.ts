@@ -206,7 +206,7 @@ async function seedProducts(numProducts: number) {
       isDraft: false,
       stock: faker.datatype.number({ min: 0, max: 100 }),
       sku: faker.datatype.uuid(),
-      imageUrl: faker.image.food(1200 / 2, 800 / 2, true),
+      imageUrl: faker.image.abstract(1200 / 2, 800 / 2, true),
     })
   }
   await prisma.product.createMany({ data: products })
