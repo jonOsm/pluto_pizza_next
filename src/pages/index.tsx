@@ -10,6 +10,7 @@ const bruno = Bruno_Ace_SC({ subsets: ["latin"], weight: "400" })
 
 const Home: NextPage = () => {
   const pageSize = 9
+  const numStars = 100
   //TODO: Create pagination component
   const [productPager, setProductPager] = useState({ skip: 0, take: pageSize })
 
@@ -98,6 +99,7 @@ const Home: NextPage = () => {
             </button>
           </div>
         </div>
+        <div className="starfield absolute bottom-0 left-0 right-0 top-0"></div>
       </main>
     </>
   )
