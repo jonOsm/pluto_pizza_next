@@ -62,8 +62,8 @@ const Home: NextPage = () => {
           >
             Our Otherworldly Menu
           </h1>
-          <p className="text-xl">
-            Parttake in the finest delicacies the solar system has to offer. Low
+          <p className="mt-3 text-2xl">
+            Partake in the finest delicacies the solar system has to offer. Low
             prices, out-of-this-world flavour!
           </p>
         </div>
