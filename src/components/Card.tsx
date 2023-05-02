@@ -15,13 +15,13 @@ export default function Card({
   children,
 }: PropsWithChildren<CardProps>) {
   return (
-    <div className="card image-full col-span-12 bg-base-100 shadow-xl lg:col-span-4">
+    <div className="card image-full col-span-12 max-h-[400px] bg-base-100 shadow-xl lg:col-span-4">
       <figure>
-        {/* TODO: conver to next <Image/> */}
-        <img src={imgUrl} alt={`${title} `} />
+        {/* TODO: convert to next <Image/> */}
+        <img className="w-full object-fill" src={imgUrl} alt={`${title} `} />
       </figure>
       {/* <div style={abel.style} className="card-body m-5 rounded bg-base-300/60"> */}
-      <div className="card-body m-6 rounded bg-base-300/70">
+      <div className="card-body rounded bg-base-300/70">
         <h2
           style={bruno.style}
           className="bold card-title text-2xl sm:text-3xl"

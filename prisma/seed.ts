@@ -193,11 +193,11 @@ async function seedProductCustomizations() {
 }
 async function seedProducts(numProducts: number) {
   const products: Prisma.ProductCreateInput[] = []
-  const nameCaps = ["pizza", "sandwich", "pasta"]
+  const nameEndings = ["pizza", "sandwich", "pasta"]
   for (let i = 0; i < numProducts; i++) {
     const numWords = faker.datatype.number({ min: 1, max: 3 })
     const nameCap =
-      nameCaps[faker.datatype.number({ min: 0, max: nameCaps.length })]
+      nameEndings[faker.datatype.number({ min: 0, max: nameEndings.length })]
 
     products.push({
       name: `${faker.lorem.words(numWords)} ${nameCap || ""}`,
@@ -206,7 +206,12 @@ async function seedProducts(numProducts: number) {
       isDraft: false,
       stock: faker.datatype.number({ min: 0, max: 100 }),
       sku: faker.datatype.uuid(),
-      imageUrl: faker.image.abstract(1200 / 2, 800 / 2, true),
+      // imageUrl: faker.image.abstract(1200 / 2, 800 / 2, true),
+      imageUrl: faker.helpers.arrayElement([
+        "/pepperoni-min.jpg",
+        "/arugula-min.jpg",
+        "/mediterranean-min.jpg",
+      ]),
     })
   }
   await prisma.product.createMany({ data: products })

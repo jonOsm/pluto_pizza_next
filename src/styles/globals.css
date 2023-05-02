@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 
+.card.image-full::before {
+    background:none  !important;
+}
+
 .animated-star {
     animation-name: north;
     animation-iteration-count: infinite;
@@ -16,7 +20,7 @@
     }
 }
 
-.shooting-star {
+/* .shooting-star {
     animation-name: north-east;
     animation-iteration-count: 1;
     animation-direction: normal;
@@ -25,9 +29,9 @@
 @keyframes north-east {
     to {
         top: -1%;
-        right: 101%;
+        right: 100%;
     }
-} 
+}  */
 
 body::-webkit-scrollbar {
   width: 3px;
