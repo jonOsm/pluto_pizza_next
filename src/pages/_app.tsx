@@ -11,6 +11,7 @@ import { api } from "~/utils/api"
 
 import "~/styles/globals.css"
 import TopBar from "~/components/TopBar"
+import Starfield from "~/components/Starfield"
 
 const strait = Strait({ subsets: ["latin"], weight: "400" })
 
@@ -24,12 +25,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <div
         data-theme="business"
         style={strait.style}
-        className="bg-base-300 p-[0.05px] sm:bg-gradient-to-br sm:from-base-300 sm:to-base-100"
+        className="relative bg-base-300 p-[0.05px] sm:bg-gradient-to-br sm:from-base-300 sm:to-base-100"
       >
         <TopBar />
         <div className="relative overflow-x-hidden p-3">
           <Component {...pageProps} />
         </div>
+        <Starfield></Starfield>
       </div>
     </SessionProvider>
   )

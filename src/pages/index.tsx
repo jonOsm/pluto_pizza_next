@@ -5,6 +5,7 @@ import { api } from "~/utils/api"
 import Card from "~/components/Card"
 import { useState } from "react"
 import { Bruno_Ace_SC } from "next/font/google"
+import Starfield from "~/components/Starfield"
 
 const bruno = Bruno_Ace_SC({ subsets: ["latin"], weight: "400" })
 
@@ -99,7 +100,6 @@ const Home: NextPage = () => {
             </button>
           </div>
         </div>
-        <div className="starfield absolute bottom-0 left-0 right-0 top-0"></div>
       </main>
     </>
   )
