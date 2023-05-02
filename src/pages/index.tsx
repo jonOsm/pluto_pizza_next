@@ -4,6 +4,9 @@ import Head from "next/head"
 import { api } from "~/utils/api"
 import Card from "~/components/Card"
 import { useState } from "react"
+import { Bruno_Ace_SC } from "next/font/google"
+
+const bruno = Bruno_Ace_SC({ subsets: ["latin"], weight: "400" })
 
 const Home: NextPage = () => {
   const pageSize = 12
@@ -43,11 +46,14 @@ const Home: NextPage = () => {
           src="/saturn.png"
         ></img>
         <img
-          className="absolute -right-[80px] top-[30vh]"
+          className="absolute -right-[80px] top-[30vh] hidden sm:block"
           width="600"
           height="600"
           src="/spaceship.png"
         ></img>
+        <h1 className={"bold mt-3 text-[40px] uppercase " + bruno.className}>
+          Our Otherworldly Menu
+        </h1>
         <div className="grid grid-cols-12 gap-3 rounded-lg p-3">
           {products.data && products.data?.length > 0
             ? products.data?.map((p) => (

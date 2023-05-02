@@ -20,7 +20,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
       {/* Padding used to negate collapsing topmargin */}
       <div
         data-theme="business"
-        className="bg-gradient-to-br from-black to-base-content p-[0.05px]"
+        // className="bg-base-300 p-[0.05px]"
+        className="bg-base-300 p-[0.05px] sm:bg-gradient-to-br sm:from-base-300 sm:to-base-100"
       >
         <TopBar />
         <div className="p-3">
