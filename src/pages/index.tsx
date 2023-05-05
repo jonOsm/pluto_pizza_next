@@ -3,15 +3,13 @@ import Head from "next/head"
 
 import { api } from "~/utils/api"
 import Card from "~/components/Card"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { Bruno_Ace_SC } from "next/font/google"
-import Starfield from "~/components/Starfield"
 
 const bruno = Bruno_Ace_SC({ subsets: ["latin"], weight: "400" })
 
 const Home: NextPage = () => {
   const pageSize = 9
-  const numStars = 100
   //TODO: Create pagination component
   const [productPager, setProductPager] = useState({ skip: 0, take: pageSize })
 
@@ -72,15 +70,19 @@ const Home: NextPage = () => {
         <div className="grid grid-cols-12 gap-3 rounded-lg p-3">
           {products.data && products.data?.length > 0
             ? products.data?.map((p) => (
-                <Card
+                <Suspense
                   key={p.id}
-                  title={p.name}
-                  imgUrl={p.imageUrl}
-                  btnText="Add to Order"
+                  fallback={<div className="h-28 w-28"></div>}
                 >
-                  <span className="text-xl text-accent">${p.basePrice}</span>
-                  <p className="text-xl ">{p.description}</p>
-                </Card>
+                  <Card
+                    title={p.name}
+                    imgUrl={p.imageUrl}
+                    btnText="Add to Order"
+                  >
+                    <span className="text-xl text-accent">${p.basePrice}</span>
+                    <p className="text-xl ">{p.description}</p>
+                  </Card>
+                </Suspense>
               ))
             : "No products found :("}
         </div>

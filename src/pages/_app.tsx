@@ -12,6 +12,7 @@ import { api } from "~/utils/api"
 import "~/styles/globals.css"
 import TopBar from "~/components/TopBar"
 import Starfield from "~/components/Starfield"
+import Footer from "~/components/Footer"
 
 const strait = Strait({ subsets: ["latin"], weight: "400" })
 
@@ -31,7 +32,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <div className="relative overflow-x-hidden p-3">
           <Component {...pageProps} />
         </div>
-        <Starfield></Starfield>
+        <Footer></Footer>
+        {/* <Starfield></Starfield> */}
       </div>
     </SessionProvider>
   )
